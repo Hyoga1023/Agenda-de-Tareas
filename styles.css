@@ -1,0 +1,589 @@
+/* === VARIABLES Y FUENTES === */
+@font-face {
+  font-family: 'AustieBostKittenKlub';
+  src: url('./Fuente/AustieBostKittenKlub.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --primario-color: #FFE1E0;
+  --secundario-color: #7F55B1;
+  --terciario-color: #9B7EBD;
+  --cuaternario-color: #F49BAB;
+  --quinto-color: #000000;
+  --sexto-color: #FFFFFF;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(
+    180deg,
+    var(--primario-color),
+    var(--cuaternario-color),
+    var(--terciario-color),
+    var(--secundario-color)
+  );
+  box-sizing: border-box;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* === TIPOGRAFÍA SECUNDARIA === */
+.flavors-regular {
+  font-family: "Flavors", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* === ESTRELLAS === */
+.falling-star {
+  position: fixed;
+  top: -20px;
+  pointer-events: none;
+  z-index: 9999;
+  animation: fall-star linear forwards;
+  user-select: none;
+  will-change: transform;
+}
+
+@keyframes fall-star {
+  to {
+    transform: translateY(110vh) rotate(360deg);
+  }
+}
+
+/* === HEADER === */
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 30px 0 0;
+}
+
+.titulo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2px;
+}
+
+.titulo h1 {
+  font-family: "Flavors", cursive;
+  font-size: 3rem;
+  color: var(--secundario-color);
+}
+
+.titulo img {
+  width: 300px;
+  height: auto;
+}
+
+/* === MAIN === */
+main {
+  width: 100%;
+  padding: 0 15px;
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* === FORMULARIO === */
+form#formulario-tarea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 40px;
+}
+
+form input,
+form button {
+  font-family: 'AustieBostKittenKlub', cursive;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: none;
+  box-sizing: border-box;
+}
+
+form input {
+  background-color: var(--sexto-color);
+}
+
+form button {
+    font-size: 1.5rem;  
+    background-color: var(--secundario-color);
+    color: var(--sexto-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 12px 0 var(--primario-color);
+}
+
+form button:hover {
+    background-color: var(--terciario-color);
+}
+
+/* === TARJETAS === */
+.tarjetas,
+.contenedor-tarjetas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 1100px;
+  padding: 0 10px 30px 10px;
+  box-sizing: border-box;
+}
+
+.tarjeta {
+  font-family: 'AustieBostKittenKlub', cursive;
+  font-size: 1.2rem;
+  width: 300px;
+  min-height: 180px;
+  background-color: var(--primario-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  transition: transform 0.3s ease;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.tarjeta:hover {
+  transform: translateY(-5px);
+}
+
+.botones-tarjeta {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.botones-tarjeta button {
+  flex: 1;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background-color: var(--secundario-color);
+  color: var(--sexto-color);
+  transition: background-color 0.3s ease;
+}
+
+.botones-tarjeta button:hover {
+  background-color: var(--terciario-color);
+}
+
+/* Estilos para el chatbot */
+/* ========================================
+   ESTILOS PARA CHATBOT DE TAREAS
+   Agregar al final de tu archivo styles.css
+   ======================================== */
+
+/* Contenedor principal del chatbot */
+#chatbot {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  padding: 25px;
+  margin: 25px 0;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto de brillo sutil */
+#chatbot::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+#chatbot:hover::before {
+  left: 100%;
+}
+
+/* Título del chatbot */
+#chatbot h2 {
+  color: white;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Input de consulta */
+#consulta {
+  width: 100%;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  margin-bottom: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-sizing: border-box;
+}
+
+#consulta:focus {
+  outline: none;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  background: white;
+}
+
+#consulta::placeholder {
+  color: #666;
+  font-style: italic;
+}
+
+/* Botón de envío */
+#btn-consulta {
+  background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+  color: white;
+  border: none;
+  padding: 15px 35px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  box-shadow: 0 5px 20px rgba(238, 90, 82, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+#btn-consulta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+#btn-consulta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(238, 90, 82, 0.4);
+}
+
+#btn-consulta:hover::before {
+  left: 100%;
+}
+
+#btn-consulta:active {
+  transform: translateY(-1px);
+}
+
+#btn-consulta:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Contenedor de respuestas */
+#respuesta-chatbot {
+  margin-top: 20px;
+  min-height: 60px;
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+/* Scrollbar personalizado para WebKit */
+#respuesta-chatbot::-webkit-scrollbar {
+  width: 6px;
+}
+
+#respuesta-chatbot::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+#respuesta-chatbot::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+#respuesta-chatbot::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Estilos base para respuestas */
+.respuesta-success,
+.respuesta-error,
+.respuesta-warning,
+.respuesta-loading,
+.respuesta-info {
+  padding: 18px;
+  border-radius: 15px;
+  margin: 10px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Iconos de respuesta */
+.respuesta-icono {
+  font-size: 1.2em;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Contenido de respuesta */
+.respuesta-contenido {
+  flex: 1;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+/* Respuesta exitosa */
+.respuesta-success {
+  background: rgba(76, 175, 80, 0.9);
+  color: white;
+  border-left: 4px solid #4caf50;
+  box-shadow: 0 5px 20px rgba(76, 175, 80, 0.3);
+}
+
+/* Respuesta de error */
+.respuesta-error {
+  background: rgba(244, 67, 54, 0.9);
+  color: white;
+  border-left: 4px solid #f44336;
+  box-shadow: 0 5px 20px rgba(244, 67, 54, 0.3);
+}
+
+/* Respuesta de advertencia */
+.respuesta-warning {
+  background: rgba(255, 193, 7, 0.9);
+  color: #333;
+  border-left: 4px solid #ffc107;
+  box-shadow: 0 5px 20px rgba(255, 193, 7, 0.3);
+}
+
+/* Respuesta de carga */
+.respuesta-loading {
+  background: rgba(33, 150, 243, 0.9);
+  color: white;
+  border-left: 4px solid #2196f3;
+  box-shadow: 0 5px 20px rgba(33, 150, 243, 0.3);
+  animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1), pulse 1.5s ease-in-out infinite;
+}
+
+/* Mensaje de bienvenida */
+.mensaje-bienvenida {
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  padding: 20px;
+  border-radius: 15px;
+  border-left: 4px solid #667eea;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.mensaje-bienvenida p {
+  margin: 0 0 15px 0;
+  font-weight: 500;
+}
+
+.mensaje-bienvenida ul {
+  margin: 10px 0 0 20px;
+  padding: 0;
+}
+
+.mensaje-bienvenida li {
+  margin: 8px 0;
+  color: #555;
+  font-style: italic;
+}
+
+.mensaje-bienvenida strong {
+  color: #667eea;
+}
+
+/* Animaciones */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  #chatbot {
+    margin: 15px 10px;
+    padding: 20px 15px;
+    border-radius: 15px;
+  }
+  
+  #chatbot h2 {
+    font-size: 1.3em;
+    margin-bottom: 15px;
+  }
+  
+  #consulta {
+    padding: 12px 18px;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  
+  #btn-consulta {
+    padding: 12px 25px;
+    font-size: 14px;
+  }
+  
+  .respuesta-success,
+  .respuesta-error,
+  .respuesta-warning,
+  .respuesta-loading,
+  .respuesta-info {
+    padding: 15px;
+    gap: 10px;
+  }
+  
+  .mensaje-bienvenida {
+    padding: 15px;
+  }
+  
+  .mensaje-bienvenida ul {
+    margin-left: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  #chatbot {
+    margin: 10px 5px;
+    padding: 15px 10px;
+  }
+  
+  #consulta, #btn-consulta {
+    font-size: 13px;
+  }
+  
+  .respuesta-icono {
+    font-size: 1em;
+  }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  #chatbot::before,
+  #btn-consulta::before,
+  .respuesta-success,
+  .respuesta-error,
+  .respuesta-warning,
+  .respuesta-loading,
+  .respuesta-info {
+    animation: none;
+  }
+  
+  #consulta:focus,
+  #btn-consulta:hover {
+    transform: none;
+  }
+}
+
+/* Modo alto contraste */
+@media (prefers-contrast: high) {
+  #chatbot {
+    border: 2px solid white;
+  }
+  
+  #consulta {
+    border: 1px solid #333;
+  }
+  
+  .respuesta-success,
+  .respuesta-error,
+  .respuesta-warning,
+  .respuesta-loading,
+  .respuesta-info {
+    border: 2px solid;
+  }
+}
+
+/* === FOOTER === */
+footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  gap: 5px;
+  font-size: 0.9rem;
+  color: var(--quinto-color);
+  background-color: rgba(255, 255, 255, 0.3);
+  margin-top: auto;
+}
+footer img{
+  width: 120px;
+  height: auto;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 600px) {
+  .titulo h1 {
+    font-size: 2rem;
+  }
+
+  .tarjeta {
+    width: 90%;
+  }
+
+  form#formulario-tarea {
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+}

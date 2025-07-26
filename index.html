@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="img/Gato_Favicon.png" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Flavors&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="reset.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Agenda de Tareas</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4285f4">
+</head>
+<body>
+  <header>
+    <div class="titulo">
+      <h1>Agenda de Tareas</h1>
+      <img src="img/ositos.png" alt="familia de ositos" />
+    </div>
+  </header>
+  
+  <main>
+    <div id="contenedor-tareas"></div>
+    <form id="formulario-tarea">
+      <input type="text" id="titulo" placeholder="Materia" required>
+      <input type="text" id="descripcion" placeholder="Descripción de la tarea" required>
+      <input type="date" id="fecha" required>
+      <button type="submit">Agregar tarea</button>
+    </form>
+    <div class="tarjetas" id="contenedor-tarjetas"></div>
+    
+    <div id="chatbot">
+      <h2>Consulta tus tareas 12345</h2>
+      <input type="text" id="consulta" placeholder="Pregunta algo (ej. ¿Qué tareas tengo para mañana?)">
+      <button id="btn-consulta">Enviar</button>
+      <div id="respuesta-chatbot"></div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Hecho con 💜 por Papá para Danielle</p>
+    <img src="img/logo_letra_negra_sin_fondo.png" alt="Logo_desarrollador" class="footer-logo"/>
+  </footer>
+  <script src="config.js"></script> 
+  <script src="chatbot.js"></script> 
+  <script src="funcionalidad1.js"></script>
+  <script src="estrellas.js"></script>
+  <script src="sw.js"></script>
+</body>
+</html>
