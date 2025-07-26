@@ -16,7 +16,7 @@ const config = {
     },
     
     mensajes: {
-      bienvenida: '👋 ¡Hola Cesar! Soy tu asistente inteligente para consultar tus tareas.',
+      bienvenida: '👋 ¡Hola Danielle! Soy tu asistente inteligente para consultar tus tareas.',
       error_api: '❌ Error de conexión con Groq API. Verifica tu API key.',
       error_general: '❌ Ups, algo salió mal. Intenta de nuevo.',
       cargando: '🤔 Analizando tus tareas...',

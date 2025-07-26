@@ -126,7 +126,7 @@ class ChatbotTareas {
   mostrarMensajeBienvenida() {
     const mensajeBienvenida = `
       <div class="mensaje-bienvenida">
-        <p>👋 ¡Ey Cesar! Soy tu asistente inteligente para consultar tus tareas.</p>
+        <p>👋 ¡Ey Danielle! Soy tu asistente inteligente para consultar tus tareas.</p>
         <p><small>🚀 Powered by Groq (Llama 3.1) - Súper rápido</small></p>
         <p><strong>Prueba estas consultas:</strong></p>
         <ul>
@@ -168,7 +168,7 @@ class ChatbotTareas {
     // Analizar y formatear tareas
     let contextoTareas = '';
     if (tareas.length === 0) {
-      contextoTareas = 'Cesar no tiene tareas registradas actualmente.';
+      contextoTareas = 'Danielle no tiene tareas registradas actualmente.';
     } else {
       contextoTareas = tareas.map((tarea, index) => {
         const fechaTarea = new Date(tarea.fecha);
@@ -193,13 +193,13 @@ class ChatbotTareas {
       }).join('\n\n');
     }
 
-    return `Eres un asistente inteligente especializado en gestión de tareas académicas para Cesar Martinez, un estudiante de desarrollo de software que vive en Yumbo, Colombia.
+    return `Eres un asistente inteligente especializado en gestión de tareas académicas para Danielle Martinez, un estudiante de desarrollo de software que vive en Yumbo, Colombia.
 
 INFORMACIÓN ACTUAL:
 - Fecha de hoy: ${fechaHoyStr} (${diaSemana})
 - Hora actual: ${fechaHoy.toLocaleTimeString('es-ES')}
 
-TAREAS DE CESAR:
+TAREAS DE DANIELLE:
 ${contextoTareas}
 
 INSTRUCCIONES PARA TUS RESPUESTAS:
@@ -210,10 +210,10 @@ INSTRUCCIONES PARA TUS RESPUESTAS:
 - Puedes sugerir organización, consejos de estudio o recordatorios
 - Usa emojis para hacer las respuestas más visuales
 - Si las tareas están vencidas, marca la urgencia pero mantén un tono motivador
-- Puedes ser casual y usar el nombre "Cesar" en tus respuestas
+- Puedes ser casual y usar el nombre "Danielle" en tus respuestas
 - Si preguntan por materias específicas, busca en los títulos de las tareas
 
-CONSULTA DE CESAR: ${consulta}
+CONSULTA DE DANIELLE: ${consulta}
 
 Responde de forma útil y específica basándote en sus tareas reales:`;
   }
