@@ -88,26 +88,19 @@
       
       if (!bocadillo) {
         console.error("No se encontró #bocadillo-mascota");
-        Swal.fire({
-          title: 'Error',
-          text: texto,
-          icon: 'error',
-          timer: duracion,
-          showConfirmButton: false
-        });
         return;
       }
 
-      setTimeout(() => {
-        const canvas = document.querySelector("canvas.l2d-canvas");
+      function posicionarYMostrar() {
+        const canvas = document.querySelector("canvas");
         if (canvas) {
           const rect = canvas.getBoundingClientRect();
           if (esMovil) {
             bocadillo.style.left = '10px';
             bocadillo.style.right = 'auto';
-            bocadillo.style.top = `${rect.top - 60}px`;
+            bocadillo.style.top = `${rect.top - 70}px`;
             bocadillo.style.bottom = 'auto';
-            bocadillo.style.maxWidth = '250px';
+            bocadillo.style.maxWidth = '280px';
           } else {
             bocadillo.style.left = `${rect.left - 250}px`;
             bocadillo.style.right = 'auto';
@@ -115,18 +108,22 @@
             bocadillo.style.bottom = 'auto';
           }
         } else {
-          bocadillo.style.left = '10px';
-          bocadillo.style.top = '20px';
-          bocadillo.style.right = 'auto';
-          bocadillo.style.bottom = 'auto';
-          console.warn("Canvas Live2D no encontrado, usando posición por defecto");
+          if (esMovil) {
+            bocadillo.style.right = '20px';
+            bocadillo.style.top = '40%';
+            bocadillo.style.left = 'auto';
+            bocadillo.style.bottom = 'auto';
+          } else {
+            bocadillo.style.right = '150px';
+            bocadillo.style.top = '50%';
+            bocadillo.style.left = 'auto';
+            bocadillo.style.bottom = 'auto';
+          }
         }
 
         bocadillo.textContent = texto;
         bocadillo.style.display = 'block';
-        setTimeout(() => {
-          bocadillo.style.opacity = '1';
-        }, 100);
+        bocadillo.style.opacity = '1';
 
         setTimeout(() => {
           bocadillo.style.opacity = '0';
@@ -134,7 +131,9 @@
             bocadillo.style.display = 'none';
           }, 300);
         }, duracion);
-      }, 500);
+      }
+
+      posicionarYMostrar();
     }
 
     window.addEventListener('load', () => {
@@ -187,7 +186,7 @@
           canvas.style.transform = "translateY(-50%)";
           canvas.style.zIndex = "9999";
           console.log("Canvas Live2D posicionado");
-          mostrarBocadillo("¡Hola Danielle! Soy Kiki 🐱✨", 6000);
+          mostrarBocadillo("¡Hola Danielle! Soy Kiki 🐱✨", 5000);
         } else {
           console.error("No se encontró el canvas tras inicializar Live2D");
           mostrarBocadillo("😿 No pude cargar mi imagen. Revisa tu navegador.", 6000);
