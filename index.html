@@ -75,24 +75,14 @@
     function mostrarBocadillo(texto, duracion = 4000) {
       const bocadillo = document.getElementById('bocadillo-mascota');
       const canvas = document.querySelector("canvas.l2d-canvas");
-      const esMovil = /Mobi|Android|iPhone/i.test(navigator.userAgent);
-
-      if (!bocadillo) {
-        console.warn("❌ No se encontró el bocadillo.");
+      if (!bocadillo || !canvas) {
+        console.warn("❌ No se encontró el canvas o el bocadillo.");
         return;
       }
 
-      if (!canvas) {
-        console.warn("❌ No se encontró el canvas Live2D.");
-        bocadillo.style.left = esMovil ? '10px' : '20px';
-        bocadillo.style.top = 'auto';
-        bocadillo.style.bottom = '20px';
-      } else {
-        const rect = canvas.getBoundingClientRect();
-        bocadillo.style.left = esMovil ? '10px' : `${rect.left - 240}px`;
-        bocadillo.style.top = esMovil ? 'auto' : `${rect.top + rect.height / 2 - 30}px`;
-        bocadillo.style.bottom = esMovil ? '20px' : 'auto';
-      }
+      const rect = canvas.getBoundingClientRect();
+      bocadillo.style.left = `${rect.left - 240}px`;
+      bocadillo.style.top = `${rect.top + rect.height / 2 - 30}px`;
 
       bocadillo.textContent = texto;
       bocadillo.style.display = 'block';
@@ -109,47 +99,35 @@
     // 🐾 Inicializar la mascota
     window.addEventListener('load', () => {
       const esMovil = /Mobi|Android|iPhone/i.test(navigator.userAgent);
-      console.log("📱 Dispositivo:", esMovil ? "Móvil" : "Escritorio");
 
-      // Verificar soporte WebGL
-      const canvasTest = document.createElement('canvas');
-      const gl = canvasTest.getContext('webgl') || canvasTest.getContext('experimental-webgl');
-      if (!gl) {
-        console.error("❌ WebGL no está soportado en este dispositivo.");
-        mostrarBocadillo("😿 No puedo aparecer, tu dispositivo no soporta WebGL.", 6000);
-        return;
-      }
+      console.log("📱 Dispositivo:", esMovil ? "Móvil" : "Escritorio");
 
       L2Dwidget.init({
         model: {
-          jsonPath: "/live2d/shizuku.model.json" // Ruta absoluta para GitHub Pages
+          jsonPath: "live2d/shizuku.model.json" // Usar modelo local
         },
         display: {
           position: "right",
-          width: esMovil ? 80 : 120,
-          height: esMovil ? 150 : 220,
+          width: esMovil ? 100 : 120,
+          height: esMovil ? 180 : 220,
           hOffset: esMovil ? 10 : 0,
           vOffset: esMovil ? 20 : 0
         },
         mobile: {
           show: true,
-          scale: 0.6, // Más pequeño para mejor rendimiento
+          scale: 0.8, // Reducir escala para mejor rendimiento
           motion: true
         },
         react: {
           opacityDefault: 0.8,
           opacityOnHover: 1
         }
-      }).catch(error => {
-        console.error("❌ Error al inicializar Live2D:", error);
-        mostrarBocadillo("😿 No pude cargar mi imagen. Revisa tu conexión o navegador.", 6000);
       });
 
       // Posicionar el canvas y mostrar bocadillo
       const checkCanvas = setInterval(() => {
         const canvas = document.querySelector("canvas.l2d-canvas");
         if (canvas) {
-          canvas.classList.add('l2d-canvas');
           canvas.style.position = "fixed";
           canvas.style.right = esMovil ? "10px" : "0";
           canvas.style.top = "50%";
@@ -169,7 +147,7 @@
       setTimeout(() => {
         if (!document.querySelector("canvas.l2d-canvas")) {
           console.error("❌ Error: No se cargó el canvas Live2D. Verifica el modelo o WebGL.");
-          mostrarBocadillo("😿 No pude cargar mi imagen. Revisa tu conexión o navegador.", 6000);
+          mostrarBocadillo("😿 No pude cargar mi imagen. ¿Tienes WebGL habilitado?", 6000);
         }
       }, 10000);
     });
