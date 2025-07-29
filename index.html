@@ -45,13 +45,10 @@
     <img src="img/logo_letra_negra_sin_fondo.png" alt="Logo_desarrollador" class="footer-logo" />
   </footer>
 
-  <!-- 💬 Bocadillo de la mascota -->
+  <!-- 💬 Bocadillo -->
   <div id="bocadillo-mascota" style="
     position: fixed;
-    top: 50%;
-    right: 150px;
-    transform: translateY(-50%);
-    max-width: 240px;
+    max-width: 220px;
     background: #fff;
     color: #333;
     font-family: 'Arial', sans-serif;
@@ -59,29 +56,35 @@
     padding: 10px 15px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    z-index: 10000;
+    z-index: 10001;
     display: none;
     opacity: 0;
     transition: opacity 0.3s ease;
   "></div>
 
-  <!-- 📦 Scripts principales -->
+  <!-- 📦 Scripts -->
   <script src="config.js"></script>
   <script src="chatbot.js"></script>
   <script src="funcionalidad1.js"></script>
   <script src="estrellas.js"></script>
   <script src="sw.js"></script>
-
-  <!-- 🐱 Live2D Widget y control -->
   <script src="https://cdn.jsdelivr.net/npm/live2d-widget@3.1.4/lib/L2Dwidget.min.js"></script>
+
   <script>
-    // 💬 Bocadillo flotante con mensaje
+    // 💬 Función para mostrar el bocadillo junto a la mascotica
     function mostrarBocadillo(texto, duracion = 4000) {
       const bocadillo = document.getElementById('bocadillo-mascota');
-      if (!bocadillo) return;
+      const canvas = document.querySelector("canvas");
+      if (!bocadillo || !canvas) return;
+
+      const rect = canvas.getBoundingClientRect();
+      bocadillo.style.left = `${rect.left - 240}px`;
+      bocadillo.style.top = `${rect.top + rect.height / 2 - 30}px`;
+
       bocadillo.textContent = texto;
       bocadillo.style.display = 'block';
       bocadillo.style.opacity = '1';
+
       setTimeout(() => {
         bocadillo.style.opacity = '0';
         setTimeout(() => {
@@ -90,9 +93,11 @@
       }, duracion);
     }
 
-    // 🐾 Inicializa mascotica al cargar todo
+    // 🐾 Inicializar la mascotica
     window.addEventListener('load', () => {
-      console.log("🐱 Inicializando mascotica Live2D...");
+      const esMovil = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+
+      console.log("📱 Dispositivo:", esMovil ? "Móvil" : "Escritorio");
 
       L2Dwidget.init({
         model: {
@@ -100,19 +105,23 @@
         },
         display: {
           position: "right",
-          width: 120,
-          height: 220,
+          width: esMovil ? 100 : 120,
+          height: esMovil ? 180 : 220,
           hOffset: 0,
           vOffset: 0
         },
-        mobile: { show: true },
+        mobile: {
+          show: true,
+          scale: 1,
+          motion: true
+        },
         react: {
           opacityDefault: 0.8,
           opacityOnHover: 1
         }
       });
 
-      // Posicionar canvas después de render
+      // Posicionar el canvas cuando ya esté cargado
       setTimeout(() => {
         const canvas = document.querySelector("canvas");
         if (canvas) {
@@ -121,16 +130,14 @@
           canvas.style.top = "50%";
           canvas.style.transform = "translateY(-50%)";
           canvas.style.zIndex = "9999";
-          console.log("📍 Mascota posicionada correctamente.");
-        } else {
-          console.warn("❌ Canvas no encontrado. Verificá si el modelo cargó bien.");
-        }
-      }, 2000);
+          console.log("✅ Canvas Live2D cargado correctamente.");
 
-      // Mensaje de bienvenida personalizado para Danielle
-      setTimeout(() => {
-        mostrarBocadillo("¡Hola Danielle! Soy quien contesta la IA y me llamo Kiki 🐱✨", 6000);
-      }, 3500);
+          // Mostrar bocadillo especial para Danielle
+          mostrarBocadillo("¡Hola Danielle! Soy quien contesta la IA y me llamo Kiki 🐱✨", 6000);
+        } else {
+          console.warn("❌ No se encontró el canvas Live2D. Revisa tu conexión o modelo.");
+        }
+      }, 2500);
     });
   </script>
 </body>
