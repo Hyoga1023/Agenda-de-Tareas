@@ -48,71 +48,90 @@
   <!-- 💬 Bocadillo de la mascota -->
   <div id="bocadillo-mascota" style="
     position: fixed;
-    bottom: 140px;
-    right: 200px;
-    max-width: 250px;
+    top: 50%;
+    right: 150px;
+    transform: translateY(-50%);
+    max-width: 240px;
     background: #fff;
     color: #333;
-    font-family: 'Arial';
+    font-family: 'Arial', sans-serif;
     font-size: 14px;
     padding: 10px 15px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     z-index: 10000;
     display: none;
+    opacity: 0;
     transition: opacity 0.3s ease;
   "></div>
 
-  <!-- 📦 Scripts de tu app -->
+  <!-- 📦 Scripts principales -->
   <script src="config.js"></script>
   <script src="chatbot.js"></script>
   <script src="funcionalidad1.js"></script>
   <script src="estrellas.js"></script>
   <script src="sw.js"></script>
 
-  <!-- 🐱 Mascota Live2D -->
+  <!-- 🐱 Live2D Widget y control -->
   <script src="https://cdn.jsdelivr.net/npm/live2d-widget@3.1.4/lib/L2Dwidget.min.js"></script>
   <script>
-  window.addEventListener('DOMContentLoaded', () => {
-    console.log("🐱 Inicializando mascotica...");
-    L2Dwidget.init({
-      model: {
-        jsonPath: "https://cdn.jsdelivr.net/npm/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json"
-      },
-      display: {
-        position: "right", 
-        width: 120,
-        height: 220,
-        hOffset: 0,
-        vOffset: 0 
-      },
-      mobile: {
-        show: true
-      },
-      react: {
-        opacityDefault: 0.8,
-        opacityOnHover: 1
-      }
+    // 💬 Bocadillo flotante con mensaje
+    function mostrarBocadillo(texto, duracion = 4000) {
+      const bocadillo = document.getElementById('bocadillo-mascota');
+      if (!bocadillo) return;
+      bocadillo.textContent = texto;
+      bocadillo.style.display = 'block';
+      bocadillo.style.opacity = '1';
+      setTimeout(() => {
+        bocadillo.style.opacity = '0';
+        setTimeout(() => {
+          bocadillo.style.display = 'none';
+        }, 500);
+      }, duracion);
+    }
+
+    // 🐾 Inicializa mascotica al cargar todo
+    window.addEventListener('load', () => {
+      console.log("🐱 Inicializando mascotica Live2D...");
+
+      L2Dwidget.init({
+        model: {
+          jsonPath: "https://cdn.jsdelivr.net/npm/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json"
+        },
+        display: {
+          position: "right",
+          width: 120,
+          height: 220,
+          hOffset: 0,
+          vOffset: 0
+        },
+        mobile: { show: true },
+        react: {
+          opacityDefault: 0.8,
+          opacityOnHover: 1
+        }
+      });
+
+      // Posicionar canvas después de render
+      setTimeout(() => {
+        const canvas = document.querySelector("canvas");
+        if (canvas) {
+          canvas.style.position = "fixed";
+          canvas.style.right = "0";
+          canvas.style.top = "50%";
+          canvas.style.transform = "translateY(-50%)";
+          canvas.style.zIndex = "9999";
+          console.log("📍 Mascota posicionada correctamente.");
+        } else {
+          console.warn("❌ Canvas no encontrado. Verificá si el modelo cargó bien.");
+        }
+      }, 2000);
+
+      // Mensaje de bienvenida personalizado para Danielle
+      setTimeout(() => {
+        mostrarBocadillo("¡Hola Danielle! Soy quien contesta la IA y me llamo Kiki 🐱✨", 6000);
+      }, 3500);
     });
-
-    // 💅 Esperamos un momento para que se cree el canvas
-    setTimeout(() => {
-      const canvas = document.querySelector("canvas"); // El canvas que usa la mascota
-      if (canvas) {
-        canvas.style.position = "fixed";
-        canvas.style.right = "0";
-        canvas.style.top = "50%";
-        canvas.style.transform = "translateY(-50%)";
-        canvas.style.zIndex = "9999";
-        console.log("📍 Mascota reubicada al centro.");
-      }
-    }, 1500);
-
-    // 💬 Mensaje de bienvenida
-    setTimeout(() => {
-      mostrarBocadillo("¡Hola Danielle! soy quien responde en la IA - Pregunta lo que quieras y te ayudaré! 😎", 6000);
-    }, 2500);
-  });
-</script>
+  </script>
 </body>
 </html>
