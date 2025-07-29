@@ -45,7 +45,6 @@
     <img src="img/logo_letra_negra_sin_fondo.png" alt="Logo_desarrollador" class="footer-logo" />
   </footer>
 
-  <!-- 💬 Bocadillo -->
   <div id="bocadillo-mascota" style="
     position: fixed;
     max-width: 220px;
@@ -60,9 +59,21 @@
     display: none;
     opacity: 0;
     transition: opacity 0.3s ease;
-  "></div>
+    border: 2px solid #f0f0f0;
+  ">
+    <div style="
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 10px solid #fff;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+    "></div>
+  </div>
 
-  <!-- 📦 Scripts -->
   <script src="config.js"></script>
   <script src="chatbot.js"></script>
   <script src="funcionalidad1.js"></script>
@@ -71,12 +82,12 @@
   <script src="https://cdn.jsdelivr.net/npm/live2d-widget@3.1.4/lib/L2Dwidget.min.js"></script>
 
   <script>
-    // 💬 Función para mostrar el bocadillo
     function mostrarBocadillo(texto, duracion = 4000) {
       const bocadillo = document.getElementById('bocadillo-mascota');
       const esMovil = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+      
       if (!bocadillo) {
-        console.error("❌ No se encontró #bocadillo-mascota");
+        console.error("No se encontró #bocadillo-mascota");
         Swal.fire({
           title: 'Error',
           text: texto,
@@ -87,49 +98,60 @@
         return;
       }
 
-      const canvas = document.querySelector("canvas.l2d-canvas");
-      if (canvas) {
-        const rect = canvas.getBoundingClientRect();
-        bocadillo.style.left = esMovil ? '10px' : `${rect.left - 240}px`;
-        bocadillo.style.top = esMovil ? 'auto' : `${rect.top + rect.height / 2 - 30}px`;
-        bocadillo.style.bottom = esMovil ? '20px' : 'auto';
-      } else {
-        bocadillo.style.left = '10px';
-        bocadillo.style.top = 'auto';
-        bocadillo.style.bottom = '20px';
-        console.warn("⚠️ Canvas Live2D no encontrado, usando posición por defecto");
-      }
-
-      bocadillo.textContent = texto;
-      bocadillo.style.display = 'block';
-      bocadillo.style.opacity = '1';
-
       setTimeout(() => {
-        bocadillo.style.opacity = '0';
+        const canvas = document.querySelector("canvas.l2d-canvas");
+        if (canvas) {
+          const rect = canvas.getBoundingClientRect();
+          if (esMovil) {
+            bocadillo.style.left = '10px';
+            bocadillo.style.right = 'auto';
+            bocadillo.style.top = `${rect.top - 60}px`;
+            bocadillo.style.bottom = 'auto';
+            bocadillo.style.maxWidth = '250px';
+          } else {
+            bocadillo.style.left = `${rect.left - 250}px`;
+            bocadillo.style.right = 'auto';
+            bocadillo.style.top = `${rect.top + rect.height / 2 - 30}px`;
+            bocadillo.style.bottom = 'auto';
+          }
+        } else {
+          bocadillo.style.left = '10px';
+          bocadillo.style.top = '20px';
+          bocadillo.style.right = 'auto';
+          bocadillo.style.bottom = 'auto';
+          console.warn("Canvas Live2D no encontrado, usando posición por defecto");
+        }
+
+        bocadillo.textContent = texto;
+        bocadillo.style.display = 'block';
         setTimeout(() => {
-          bocadillo.style.display = 'none';
-        }, 500);
-      }, duracion);
+          bocadillo.style.opacity = '1';
+        }, 100);
+
+        setTimeout(() => {
+          bocadillo.style.opacity = '0';
+          setTimeout(() => {
+            bocadillo.style.display = 'none';
+          }, 300);
+        }, duracion);
+      }, 500);
     }
 
-    // 🐾 Inicializar la mascota
     window.addEventListener('load', () => {
-      console.log("⏳ Iniciando carga de Live2D...");
+      console.log("Iniciando carga de Live2D...");
       const esMovil = /Mobi|Android|iPhone/i.test(navigator.userAgent);
-      console.log("📱 Dispositivo:", esMovil ? "Móvil" : "Escritorio");
+      console.log("Dispositivo:", esMovil ? "Móvil" : "Escritorio");
 
-      // Verificar soporte WebGL
       const canvasTest = document.createElement('canvas');
       const gl = canvasTest.getContext('webgl') || canvasTest.getContext('experimental-webgl');
       if (!gl) {
-        console.error("❌ WebGL no está soportado en este dispositivo.");
+        console.error("WebGL no está soportado en este dispositivo.");
         mostrarBocadillo("😿 No puedo aparecer, tu dispositivo no soporta WebGL.", 6000);
         return;
       }
 
-      // Verificar carga del script Live2D
       if (typeof L2Dwidget === 'undefined') {
-        console.error("❌ Script Live2D no cargado. Verifica la conexión al CDN.");
+        console.error("Script Live2D no cargado. Verifica la conexión al CDN.");
         mostrarBocadillo("😿 No pude cargar mi imagen. Revisa tu conexión.", 6000);
         return;
       }
@@ -140,14 +162,14 @@
         },
         display: {
           position: "right",
-          width: esMovil ? 80 : 120,
-          height: esMovil ? 150 : 220,
+          width: esMovil ? 150 : 120,
+          height: esMovil ? 280 : 220,
           hOffset: esMovil ? 10 : 0,
           vOffset: esMovil ? 20 : 0
         },
         mobile: {
           show: true,
-          scale: 0.6,
+          scale: 1.0,
           motion: true
         },
         react: {
@@ -155,7 +177,7 @@
           opacityOnHover: 1
         }
       }).then(() => {
-        console.log("✅ Live2D inicializado correctamente");
+        console.log("Live2D inicializado correctamente");
         const canvas = document.querySelector("canvas");
         if (canvas) {
           canvas.classList.add('l2d-canvas');
@@ -164,14 +186,14 @@
           canvas.style.top = "50%";
           canvas.style.transform = "translateY(-50%)";
           canvas.style.zIndex = "9999";
-          console.log("✅ Canvas Live2D posicionado");
+          console.log("Canvas Live2D posicionado");
           mostrarBocadillo("¡Hola Danielle! Soy Kiki 🐱✨", 6000);
         } else {
-          console.error("❌ No se encontró el canvas tras inicializar Live2D");
+          console.error("No se encontró el canvas tras inicializar Live2D");
           mostrarBocadillo("😿 No pude cargar mi imagen. Revisa tu navegador.", 6000);
         }
       }).catch(error => {
-        console.error("❌ Error al inicializar Live2D:", error);
+        console.error("Error al inicializar Live2D:", error);
         mostrarBocadillo("😿 No pude cargar mi imagen. Error: " + error.message, 6000);
       });
     });
