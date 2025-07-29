@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'agenda-tareas-v2';
+const CACHE_NAME = 'agenda-tareas-v3';
 const urlsToCache = [
   '/',
   '/index.html',
