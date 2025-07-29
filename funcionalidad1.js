@@ -265,21 +265,84 @@ class GestorNotificaciones {
     }
   }
 
-  // ⏰ Programar verificación periódica
+  // ⏰ Programar verificación 3 veces al día (8AM, 12PM, 5PM)
   programarVerificacionPeriodica() {
-    // Verificar cada 30 minutos
-    setInterval(() => {
-      this.verificarYNotificar();
-    }, 30 * 60 * 1000);
+    console.log('⏰ Programando verificaciones diarias: 8AM, 12PM, 5PM');
 
-    // Verificar también cada vez que la página se hace visible
+    // Función para calcular próximo horario de notificación
+    const calcularProximaNotificacion = () => {
+      const ahora = new Date();
+      const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
+      
+      // Horarios objetivo: 8:00, 12:00, 17:00
+      const horarios = [
+        new Date(hoy.getTime()).setHours(8, 0, 0, 0),   // 8:00 AM
+        new Date(hoy.getTime()).setHours(12, 0, 0, 0),  // 12:00 PM  
+        new Date(hoy.getTime()).setHours(17, 0, 0, 0)   // 5:00 PM
+      ];
+
+      // Encontrar el próximo horario
+      let proximoHorario = null;
+      
+      for (let horario of horarios) {
+        if (horario > ahora.getTime()) {
+          proximoHorario = horario;
+          break;
+        }
+      }
+
+      // Si no hay más horarios hoy, programar para mañana a las 8 AM
+      if (!proximoHorario) {
+        const mañana = new Date(hoy.getTime() + 24 * 60 * 60 * 1000);
+        proximoHorario = mañana.setHours(8, 0, 0, 0);
+      }
+
+      return proximoHorario;
+    };
+
+    // Función para programar la próxima verificación
+    const programarProxima = () => {
+      const proximaNotificacion = calcularProximaNotificacion();
+      const ahora = Date.now();
+      const tiempoEspera = proximaNotificacion - ahora;
+      
+      const fechaProxima = new Date(proximaNotificacion);
+      const horaFormateada = fechaProxima.toLocaleTimeString('es-CO', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: false 
+      });
+      
+      console.log(`⏰ Próxima verificación: ${fechaProxima.toLocaleDateString('es-CO')} a las ${horaFormateada}`);
+      console.log(`⏱️ Tiempo de espera: ${Math.round(tiempoEspera / 1000 / 60)} minutos`);
+
+      setTimeout(() => {
+        console.log('🔔 Ejecutando verificación programada...');
+        this.verificarYNotificar();
+        
+        // Programar la siguiente
+        programarProxima();
+      }, tiempoEspera);
+    };
+
+    // Iniciar el ciclo
+    programarProxima();
+
+    // También verificar cuando la página se hace visible (pero sin saturar)
+    let ultimaVerificacion = 0;
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
-        setTimeout(() => this.verificarYNotificar(), 2000);
+        const ahora = Date.now();
+        // Solo verificar si han pasado al menos 30 minutos desde la última verificación
+        if (ahora - ultimaVerificacion > 30 * 60 * 1000) {
+          setTimeout(() => {
+            console.log('👁️ Verificación por visibilidad (espaciada)');
+            this.verificarYNotificar();
+            ultimaVerificacion = ahora;
+          }, 2000);
+        }
       }
     });
-
-    console.log('⏰ Verificación periódica programada (cada 30 min)');
   }
 
   // 🔍 Verificar tareas y enviar notificaciones
@@ -339,8 +402,11 @@ class GestorNotificaciones {
       );
     }
 
-    // 💡 PRIORIDAD BAJA: Tareas de pasado mañana (solo ocasionalmente)
-    if (tareasPasadoManana.length > 0 && Math.random() > 0.5) { // Solo 50% de las veces
+    // 💡 PRIORIDAD BAJA: Tareas de pasado mañana (solo en horario de mañana)
+    const ahora = new Date();
+    const esMañana = ahora.getHours() === 8; // Solo a las 8 AM
+    
+    if (tareasPasadoManana.length > 0 && esMañana) {
       this.enviarNotificacion(
         '🗓️ Preparación anticipada',
         tareasPasadoManana.length === 1
