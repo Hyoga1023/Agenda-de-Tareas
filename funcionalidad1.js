@@ -265,153 +265,155 @@ class GestorNotificaciones {
     }
   }
 
-  // ⏰ Programar verificación 3 veces al día (8AM, 12PM, 5PM)
+  // ⏰ Programar verificación SOLO en 3 horarios específicos (ULTRA EFICIENTE)
   programarVerificacionPeriodica() {
-    console.log('⏰ Programando verificaciones diarias: 8AM, 12PM, 5PM');
+    console.log('⏰ Configurando verificaciones precisas: 8AM, 12PM, 5PM');
 
-    // Función para calcular próximo horario de notificación
-    const calcularProximaNotificacion = () => {
+    // Función para programar un solo timeout hasta el próximo horario
+    const programarProximaVerificacion = () => {
       const ahora = new Date();
       const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
       
-      // Horarios objetivo: 8:00, 12:00, 17:00
+      // Horarios objetivo en milisegundos
       const horarios = [
-        new Date(hoy.getTime()).setHours(8, 0, 0, 0),   // 8:00 AM
-        new Date(hoy.getTime()).setHours(12, 0, 0, 0),  // 12:00 PM  
-        new Date(hoy.getTime()).setHours(17, 0, 0, 0)   // 5:00 PM
+        { hora: 8, nombre: "🌅 Buenos días" },
+        { hora: 12, nombre: "🌞 Mediodía" },
+        { hora: 17, nombre: "🌆 Tarde" }
       ];
 
-      // Encontrar el próximo horario
-      let proximoHorario = null;
-      
+      let proximoTimeout = null;
+      let nombreProximo = "";
+
+      // Buscar el próximo horario de HOY
       for (let horario of horarios) {
-        if (horario > ahora.getTime()) {
-          proximoHorario = horario;
+        const tiempoHorario = new Date(hoy.getTime()).setHours(horario.hora, 0, 0, 0);
+        if (tiempoHorario > ahora.getTime()) {
+          proximoTimeout = tiempoHorario - ahora.getTime();
+          nombreProximo = horario.nombre;
           break;
         }
       }
 
-      // Si no hay más horarios hoy, programar para mañana a las 8 AM
-      if (!proximoHorario) {
-        const mañana = new Date(hoy.getTime() + 24 * 60 * 60 * 1000);
-        proximoHorario = mañana.setHours(8, 0, 0, 0);
+      // Si no hay más horarios hoy, programar para mañana 8 AM
+      if (!proximoTimeout) {
+        const mañana8AM = new Date(hoy.getTime() + 24 * 60 * 60 * 1000).setHours(8, 0, 0, 0);
+        proximoTimeout = mañana8AM - ahora.getTime();
+        nombreProximo = "🌅 Buenos días (mañana)";
       }
 
-      return proximoHorario;
-    };
+      const horasRestantes = Math.round(proximoTimeout / (1000 * 60 * 60 * 100)) / 10;
+      console.log(`⏱️ Próxima verificación: ${nombreProximo} en ${horasRestantes}h`);
 
-    // Función para programar la próxima verificación
-    const programarProxima = () => {
-      const proximaNotificacion = calcularProximaNotificacion();
-      const ahora = Date.now();
-      const tiempoEspera = proximaNotificacion - ahora;
-      
-      const fechaProxima = new Date(proximaNotificacion);
-      const horaFormateada = fechaProxima.toLocaleTimeString('es-CO', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: false 
-      });
-      
-      console.log(`⏰ Próxima verificación: ${fechaProxima.toLocaleDateString('es-CO')} a las ${horaFormateada}`);
-      console.log(`⏱️ Tiempo de espera: ${Math.round(tiempoEspera / 1000 / 60)} minutos`);
-
+      // Programar UNA SOLA verificación
       setTimeout(() => {
-        console.log('🔔 Ejecutando verificación programada...');
+        console.log(`🔔 Ejecutando: ${nombreProximo}`);
         this.verificarYNotificar();
         
-        // Programar la siguiente
-        programarProxima();
-      }, tiempoEspera);
+        // Después de ejecutar, programar la siguiente
+        programarProximaVerificacion();
+      }, proximoTimeout);
     };
 
-    // Iniciar el ciclo
-    programarProxima();
+    // Inicializar con una sola llamada
+    programarProximaVerificacion();
 
-    // También verificar cuando la página se hace visible (pero sin saturar)
-    let ultimaVerificacion = 0;
+    // SOLO verificar al abrir la app SI han pasado más de 2 horas
+    let ultimaVerificacionManual = localStorage.getItem('ultimaVerificacion') || 0;
+    
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
         const ahora = Date.now();
-        // Solo verificar si han pasado al menos 30 minutos desde la última verificación
-        if (ahora - ultimaVerificacion > 30 * 60 * 1000) {
+        const dosHoras = 2 * 60 * 60 * 1000;
+        
+        if (ahora - ultimaVerificacionManual > dosHoras) {
           setTimeout(() => {
-            console.log('👁️ Verificación por visibilidad (espaciada)');
+            console.log('👁️ Verificación manual (>2h desde la última)');
             this.verificarYNotificar();
-            ultimaVerificacion = ahora;
-          }, 2000);
+            localStorage.setItem('ultimaVerificacion', ahora.toString());
+            ultimaVerificacionManual = ahora;
+          }, 1000);
         }
       }
     });
+
+    console.log('✅ Sistema ultra-eficiente activado - Solo 3 verificaciones/día');
   }
 
-  // 🔍 Verificar tareas y enviar notificaciones
+  // 🔍 Verificar tareas y enviar notificaciones (VERSIÓN ULTRA LIGERA)
   verificarYNotificar() {
     if (!this.permisoConcedido) {
       console.log('⚠️ Sin permisos para notificar');
       return;
     }
 
+    // Obtener fechas una sola vez
     const fechaHoy = obtenerFechaHoyString();
     const fechaManana = obtenerFechaMananaString();
     const fechaPasadoManana = obtenerFechaPasadoMananaString();
     
-    const tareasHoy = tareas.filter(t => t.fecha === fechaHoy);
-    const tareasManana = tareas.filter(t => t.fecha === fechaManana);
-    const tareasPasadoManana = tareas.filter(t => t.fecha === fechaPasadoManana);
-    const tareasPasadas = tareas.filter(t => t.fecha < fechaHoy);
+    // Filtrar tareas de una sola pasada (más eficiente)
+    const categorizarTareas = () => {
+      const resultado = { hoy: [], mañana: [], pasadoMañana: [], pasadas: [] };
+      
+      for (let tarea of tareas) {
+        if (tarea.fecha === fechaHoy) resultado.hoy.push(tarea);
+        else if (tarea.fecha === fechaManana) resultado.mañana.push(tarea);
+        else if (tarea.fecha === fechaPasadoManana) resultado.pasadoMañana.push(tarea);
+        else if (tarea.fecha < fechaHoy) resultado.pasadas.push(tarea);
+      }
+      
+      return resultado;
+    };
 
-    console.log('🔍 Verificando tareas:', {
-      hoy: tareasHoy.length,
-      mañana: tareasManana.length,
-      pasadoMañana: tareasPasadoManana.length,
-      pasadas: tareasPasadas.length
+    const { hoy, mañana, pasadoMañana, pasadas } = categorizarTareas();
+
+    console.log('🔍 Verificación eficiente:', {
+      hoy: hoy.length,
+      mañana: mañana.length,
+      pasadoMañana: pasadoMañana.length,
+      pasadas: pasadas.length
     });
 
-    // 🚨 PRIORIDAD MÁXIMA: Tareas vencidas
-    if (tareasPasadas.length > 0) {
+    // Enviar notificaciones solo si hay tareas (evita procesamiento innecesario)
+    if (pasadas.length > 0) {
       this.enviarNotificacion(
         '😰 ¡Tareas vencidas!',
-        `Tienes ${tareasPasadas.length} tarea(s) que se pasaron de fecha. ¡Revísalas ya!`,
+        `${pasadas.length} tarea(s) vencida(s): ${pasadas[0].titulo}${pasadas.length > 1 ? ' y más...' : ''}`,
         'vencidas',
         true
       );
     }
 
-    // 🔥 PRIORIDAD ALTA: Tareas de hoy
-    if (tareasHoy.length > 0) {
+    if (hoy.length > 0) {
       this.enviarNotificacion(
         '📝 ¡Tareas para HOY!',
-        tareasHoy.length === 1 
-          ? `"${tareasHoy[0].titulo}" - ${tareasHoy[0].descripcion}`
-          : `Tienes ${tareasHoy.length} tareas para completar HOY`,
+        hoy.length === 1 
+          ? `"${hoy[0].titulo}"`
+          : `${hoy.length} tareas para hoy`,
         'hoy',
         true
       );
     }
 
-    // ⚡ PRIORIDAD MEDIA: Tareas de mañana
-    if (tareasManana.length > 0) {
+    if (mañana.length > 0) {
       this.enviarNotificacion(
         '🌅 Tareas para MAÑANA',
-        tareasManana.length === 1
-          ? `Mañana: "${tareasManana[0].titulo}" - ${tareasManana[0].descripcion}`
-          : `Tienes ${tareasManana.length} tareas programadas para mañana`,
+        mañana.length === 1
+          ? `"${mañana[0].titulo}"`
+          : `${mañana.length} tareas para mañana`,
         'mañana',
         false
       );
     }
 
-    // 💡 PRIORIDAD BAJA: Tareas de pasado mañana (solo en horario de mañana)
-    const ahora = new Date();
-    const esMañana = ahora.getHours() === 8; // Solo a las 8 AM
-    
-    if (tareasPasadoManana.length > 0 && esMañana) {
+    // Tareas de pasado mañana solo a las 8 AM
+    const horaActual = new Date().getHours();
+    if (pasadoMañana.length > 0 && horaActual === 8) {
       this.enviarNotificacion(
-        '🗓️ Preparación anticipada',
-        tareasPasadoManana.length === 1
-          ? `Pasado mañana: "${tareasPasadoManana[0].titulo}"`
-          : `En 2 días tienes ${tareasPasadoManana.length} tareas programadas`,
+        '🗓️ Planificación',
+        pasadoMañana.length === 1
+          ? `Pasado mañana: "${pasadoMañana[0].titulo}"`
+          : `${pasadoMañana.length} tareas en 2 días`,
         'pasadoMañana',
         false
       );
