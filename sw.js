@@ -1,32 +1,27 @@
-// 🔔 SERVICE WORKER PARA TAREAS DE DANIELLE - ARREGLADO
-const CACHE_NAME = 'tareas-danielle-v2';
+// 🔔 SERVICE WORKER PARA TAREAS DE DANIELLE - OPTIMIZADO
+const CACHE_NAME = 'tareas-danielle-v3';
 const urlsToCache = [
   './',
   './index.html',
   './styles.css',
   './funcionalidad1.js',
-  './config.js',
   './chatbot.js',
-  './estrellas.js',
   './manifest.json',
-  './img/ositos.png',
-  './img/Gato_Favicon.png',
-  './img/logo_letra_negra_sin_fondo.png'
+  './img/Gato_Favicon.png'
 ];
 
 console.log('🚀 Service Worker iniciando...');
 
-// 📦 INSTALACIÓN - Cachear archivos importantes
+// 📦 INSTALACIÓN - Cachear archivos esenciales
 self.addEventListener('install', (event) => {
   console.log('📦 Service Worker instalándose...');
   
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('💾 Cacheando archivos...');
+        console.log('💾 Cacheando archivos esenciales...');
         return cache.addAll(urlsToCache).catch((error) => {
           console.log('⚠️ Error cacheando algunos archivos:', error);
-          // Intentar cachear uno por uno
           return Promise.allSettled(
             urlsToCache.map(url => 
               cache.add(url).catch(err => 
@@ -38,7 +33,6 @@ self.addEventListener('install', (event) => {
       })
       .then(() => {
         console.log('✅ Archivos cacheados correctamente');
-        // Forzar activación inmediata
         return self.skipWaiting();
       })
   );
@@ -50,7 +44,6 @@ self.addEventListener('activate', (event) => {
   
   event.waitUntil(
     Promise.all([
-      // Limpiar caches antiguos
       caches.keys().then(cacheNames => {
         return Promise.all(
           cacheNames.map(cacheName => {
@@ -61,7 +54,6 @@ self.addEventListener('activate', (event) => {
           })
         );
       }),
-      // Tomar control inmediato
       self.clients.claim()
     ]).then(() => {
       console.log('✅ Service Worker activado y listo');
@@ -71,7 +63,6 @@ self.addEventListener('activate', (event) => {
 
 // 🌐 INTERCEPTAR PETICIONES - Estrategia Cache First
 self.addEventListener('fetch', (event) => {
-  // Solo manejar requests GET del mismo origen
   if (event.request.method !== 'GET' || 
       !event.request.url.startsWith(self.location.origin)) {
     return;
@@ -80,17 +71,14 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
       .then((cachedResponse) => {
-        // Si está en cache, devolverlo
         if (cachedResponse) {
           console.log('📦 Servido desde cache:', event.request.url);
           return cachedResponse;
         }
 
-        // Si no está en cache, buscarlo en la red
         console.log('🌐 Buscando en red:', event.request.url);
         return fetch(event.request)
           .then((networkResponse) => {
-            // Si la respuesta es válida, guardarla en cache
             if (networkResponse && networkResponse.status === 200) {
               const responseClone = networkResponse.clone();
               caches.open(CACHE_NAME).then((cache) => {
@@ -102,7 +90,6 @@ self.addEventListener('fetch', (event) => {
           .catch((error) => {
             console.log('❌ Error de red:', error);
             
-            // Si es una navegación y falla, mostrar página offline
             if (event.request.destination === 'document') {
               return new Response(`
                 <!DOCTYPE html>
@@ -113,7 +100,7 @@ self.addEventListener('fetch', (event) => {
                   <title>Sin conexión - Tareas de Danielle</title>
                   <style>
                     body {
-                      font-family: Arial, sans-serif;
+                      font-family: 'Flavors', cursive;
                       text-align: center;
                       padding: 50px 20px;
                       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -153,8 +140,7 @@ self.addEventListener('fetch', (event) => {
                 <body>
                   <div class="offline-bear">🐻</div>
                   <h1>📵 Sin conexión</h1>
-                  <p>No hay conexión a internet, pero tu app sigue funcionando.</p>
-                  <p>Las tareas guardadas están disponibles offline.</p>
+                  <p>No hay conexión a internet, pero tus tareas guardadas están disponibles.</p>
                   <button onclick="window.location.reload()">
                     🔄 Reintentar conexión
                   </button>
@@ -168,7 +154,6 @@ self.addEventListener('fetch', (event) => {
               });
             }
             
-            // Para otros recursos, devolver error
             return new Response('Recurso no disponible offline', {
               status: 404,
               statusText: 'Not Found'
@@ -178,7 +163,7 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// 🔔 MANEJAR NOTIFICACIONES PUSH (para futuras implementaciones)
+// 🔔 MANEJAR NOTIFICACIONES - Integrado con funcionalidad1.js
 self.addEventListener('push', (event) => {
   console.log('📨 Notificación push recibida');
   
@@ -187,33 +172,22 @@ self.addEventListener('push', (event) => {
     try {
       datos = event.data.json();
     } catch (error) {
-      datos = { titulo: '🐻 Recordatorio', mensaje: event.data.text() };
+      datos = { titulo: '🐻 Recordatorio', mensaje: '¡Tienes tareas pendientes!' };
     }
   }
 
   const opciones = {
     body: datos.mensaje || '¡Tienes tareas pendientes!',
-    icon: 'data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><rect width="128" height="128" fill="%234285f4"/><text x="64" y="80" font-family="Arial" font-size="50" fill="white" text-anchor="middle">🐻</text></svg>',
-    badge: 'data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96"><rect width="96" height="96" fill="%23dc3545"/><text x="48" y="60" font-family="Arial" font-size="40" fill="white" text-anchor="middle">📝</text></svg>',
-    vibrate: [200, 100, 200],
-    tag: 'tarea-recordatorio',
-    requireInteraction: true,
+    icon: datos.icon || 'data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><rect width="128" height="128" fill="%2328a745"/><text x="64" y="80" font-family="Arial" font-size="50" fill="white" text-anchor="middle">🐻</text></svg>',
+    tag: datos.tag || 'tarea-recordatorio',
+    requireInteraction: datos.requireInteraction || false,
+    vibrate: datos.vibrate || [200, 100, 200],
     timestamp: Date.now(),
-    data: {
-      url: '/',
-      dateOfArrival: Date.now(),
-      primaryKey: datos.id || Date.now()
-    },
     actions: [
       {
-        action: 'ver-tareas',
+        action: 'ver',
         title: '👀 Ver tareas',
         icon: 'data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" fill="%2328a745"/><text x="32" y="40" font-family="Arial" font-size="20" fill="white" text-anchor="middle">👀</text></svg>'
-      },
-      {
-        action: 'recordar-mas-tarde',
-        title: '⏰ Recordar en 1 hora',
-        icon: 'data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" fill="%23ffc107"/><text x="32" y="40" font-family="Arial" font-size="20" fill="white" text-anchor="middle">⏰</text></svg>'
       },
       {
         action: 'cerrar',
@@ -224,14 +198,13 @@ self.addEventListener('push', (event) => {
   };
 
   event.waitUntil(
-    self.registration.showNotification(
-      datos.titulo || '🐻 Recordatorio de Tareas',
-      opciones
-    ).then(() => {
-      console.log('✅ Notificación mostrada');
-    }).catch((error) => {
-      console.error('❌ Error mostrando notificación:', error);
-    })
+    self.registration.showNotification(datos.titulo || '🐻 Recordatorio de Tareas', opciones)
+      .then(() => {
+        console.log('✅ Notificación mostrada');
+      })
+      .catch((error) => {
+        console.error('❌ Error mostrando notificación:', error);
+      })
   );
 });
 
@@ -241,112 +214,46 @@ self.addEventListener('notificationclick', (event) => {
   
   event.notification.close();
 
-  const accion = event.action;
-  const datos = event.notification.data || {};
-
   event.waitUntil(
     (async () => {
-      switch (accion) {
-        case 'ver-tareas':
-          console.log('👀 Abriendo aplicación...');
-          // Intentar enfocar una ventana existente o abrir nueva
-          const ventanaExistente = await clients.matchAll({
-            type: 'window',
-            includeUncontrolled: true
-          });
-          
-          if (ventanaExistente.length > 0) {
-            // Si hay una ventana abierta, enfocarla
-            await ventanaExistente[0].focus();
-          } else {
-            // Si no, abrir nueva ventana
-            await clients.openWindow(datos.url || '/');
-          }
-          break;
-
-        case 'recordar-mas-tarde':
-          console.log('⏰ Programando recordatorio...');
-          // Programar recordatorio en 1 hora
-          setTimeout(() => {
-            self.registration.showNotification('🔔 Recordatorio programado', {
-              body: 'No olvides revisar tus tareas pendientes',
-              icon: 'data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><rect width="128" height="128" fill="%23ffc107"/><text x="64" y="80" font-family="Arial" font-size="50" fill="white" text-anchor="middle">⏰</text></svg>',
-              tag: 'recordatorio-diferido',
-              requireInteraction: false
-            });
-          }, 60 * 60 * 1000); // 1 hora
-          break;
-
-        case 'cerrar':
-        default:
-          console.log('❌ Notificación cerrada');
-          // No hacer nada especial, solo cerrar
-          break;
+      if (event.action === 'ver') {
+        console.log('👀 Abriendo aplicación...');
+        const ventanaExistente = await clients.matchAll({
+          type: 'window',
+          includeUncontrolled: true
+        });
+        
+        if (ventanaExistente.length > 0) {
+          await ventanaExistente[0].focus();
+        } else {
+          await clients.openWindow('/');
+        }
+      } else {
+        console.log('❌ Notificación cerrada');
       }
     })()
   );
 });
 
-// 📧 MANEJAR CIERRE DE NOTIFICACIONES
-self.addEventListener('notificationclose', (event) => {
-  console.log('🔕 Notificación cerrada sin interacción');
-  
-  // Opcional: registrar estadísticas o programar recordatorio
-  const datos = event.notification.data || {};
-  if (datos.requiresFollowUp) {
-    console.log('📋 Programando seguimiento...');
-    // Aquí podrías programar un recordatorio adicional
-  }
-});
-
-// 🔧 FUNCIONES AUXILIARES
-
-// Función para programar notificaciones locales (sin push server)
-function programarNotificacionLocal(titulo, mensaje, delay = 0) {
-  setTimeout(() => {
-    if (self.registration) {
-      self.registration.showNotification(titulo, {
-        body: mensaje,
-        icon: 'data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><rect width="128" height="128" fill="%234285f4"/><text x="64" y="80" font-family="Arial" font-size="50" fill="white" text-anchor="middle">🐻</text></svg>',
-        tag: 'programada-local',
-        requireInteraction: false
-      });
-    }
-  }, delay);
-}
-
-// 🧪 MENSAJES DEL CLIENTE (para comunicación con la app principal)
+// 🧪 MENSAJES DEL CLIENTE
 self.addEventListener('message', (event) => {
-  console.log('📨 Mensaje recibido del cliente:', event.data);
-  
-  const { tipo, datos } = event.data;
-  
-  switch (tipo) {
-    case 'PROGRAMAR_RECORDATORIO':
-      console.log('⏰ Programando recordatorio local...');
-      programarNotificacionLocal(
-        datos.titulo,
-        datos.mensaje,
-        datos.delay || 0
-      );
-      break;
-      
-    case 'VERIFICAR_TAREAS':
-      console.log('🔍 Verificando tareas desde SW...');
-      // Aquí podrías implementar lógica adicional
-      break;
-      
-    case 'LIMPIAR_CACHE':
-      console.log('🧹 Limpiando cache por solicitud...');
-      event.waitUntil(
-        caches.delete(CACHE_NAME).then(() => {
-          console.log('✅ Cache limpiado');
-        })
-      );
-      break;
-      
-    default:
-      console.log('❓ Tipo de mensaje desconocido:', tipo);
+  if (event.data === 'keep-alive') {
+    console.log('🛌 Service Worker en espera');
+    return;
+  }
+
+  const { tipo, datos } = event.data || {};
+  if (tipo === 'MOSTRAR_NOTIFICACION') {
+    console.log('📨 Mostrando notificación desde cliente:', datos.titulo);
+    self.registration.showNotification(datos.titulo, {
+      body: datos.mensaje,
+      icon: datos.icon,
+      tag: datos.tag,
+      requireInteraction: datos.requireInteraction,
+      vibrate: datos.vibrate,
+      timestamp: Date.now(),
+      actions: datos.actions
+    });
   }
 });
 
