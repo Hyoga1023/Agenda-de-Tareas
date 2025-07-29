@@ -15,6 +15,7 @@
   --sexto-color: #FFFFFF;
 }
 
+/* === BASE === */
 body {
   margin: 0;
   padding: 0;
@@ -33,14 +34,52 @@ body {
   flex-direction: column;
 }
 
-/* === TIPOGRAFÍA SECUNDARIA === */
+/* === TIPOGRAFÍA === */
 .flavors-regular {
   font-family: "Flavors", cursive;
   font-weight: 400;
   font-style: normal;
 }
 
-/* === ESTRELLAS === */
+/* === ANIMACIONES === */
+@keyframes fall-star {
+  to {
+    transform: translateY(110vh) rotate(360deg);
+  }
+}
+
+@keyframes suavePulso {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.15);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(111, 66, 193, 0.25);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* === ELEMENTOS ESPECIALES === */
 .falling-star {
   position: fixed;
   top: -20px;
@@ -51,13 +90,7 @@ body {
   will-change: transform;
 }
 
-@keyframes fall-star {
-  to {
-    transform: translateY(110vh) rotate(360deg);
-  }
-}
-
-/* === HEADER === */
+/* === ESTRUCTURA PRINCIPAL === */
 header {
   display: flex;
   flex-direction: column;
@@ -83,7 +116,6 @@ header {
   height: auto;
 }
 
-/* === MAIN === */
 main {
   width: 100%;
   padding: 0 15px;
@@ -92,6 +124,24 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  gap: 5px;
+  font-size: 0.9rem;
+  color: var(--quinto-color);
+  background-color: rgba(255, 255, 255, 0.3);
+  margin-top: auto;
+}
+
+footer img {
+  width: 120px;
+  height: auto;
 }
 
 /* === FORMULARIO === */
@@ -119,16 +169,16 @@ form input {
 }
 
 form button {
-    font-size: 1.5rem;  
-    background-color: var(--secundario-color);
-    color: var(--sexto-color);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 4px 12px 0 var(--primario-color);
+  font-size: 1.5rem;  
+  background-color: var(--secundario-color);
+  color: var(--sexto-color);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 12px 0 var(--primario-color);
 }
 
 form button:hover {
-    background-color: var(--terciario-color);
+  background-color: var(--terciario-color);
 }
 
 /* === TARJETAS === */
@@ -160,11 +210,58 @@ form button:hover {
   transition: transform 0.3s ease;
   line-height: 1.6;
   word-break: break-word;
+  margin-bottom: 15px;
+  padding: 20px 15px;
+  padding-top: 35px;
 }
 
 .tarjeta:hover {
   transform: translateY(-5px);
 }
+
+/* Tarjeta para tareas de pasado mañana */
+.tarjeta.pasado-mañana {
+  background: linear-gradient(135deg, #e7e3ff 0%, #f8f5ff 100%);
+  border-left: 6px solid #6f42c1;
+  box-shadow: 0 4px 12px rgba(111, 66, 193, 0.15);
+  position: relative;
+  overflow: hidden;
+  animation: suavePulso 4s ease-in-out infinite;
+}
+
+.tarjeta.pasado-mañana::before {
+  content: "🗓️";
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  opacity: 0.6;
+}
+
+.tarjeta.pasado-mañana::after {
+  content: "PASADO MAÑANA";
+  position: absolute;
+  top: 5px;
+  left: 15px;
+  background: #6f42c1;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 15px;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.tarjeta.pasado-mañana:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(111, 66, 193, 0.3);
+}
+
+/* Orden de importancia visual */
+.tarjeta.vencida { order: 1; }
+.tarjeta.hoy { order: 2; }
+.tarjeta.mañana { order: 3; }
+.tarjeta.pasado-mañana { order: 4; }
 
 .botones-tarjeta {
   display: flex;
@@ -188,13 +285,7 @@ form button:hover {
   background-color: var(--terciario-color);
 }
 
-/* Estilos para el chatbot */
-/* ========================================
-   ESTILOS PARA CHATBOT DE TAREAS
-   Agregar al final de tu archivo styles.css
-   ======================================== */
-
-/* Contenedor principal del chatbot */
+/* === CHATBOT === */
 #chatbot {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 20px;
@@ -207,7 +298,6 @@ form button:hover {
   overflow: hidden;
 }
 
-/* Efecto de brillo sutil */
 #chatbot::before {
   content: '';
   position: absolute;
@@ -223,7 +313,6 @@ form button:hover {
   left: 100%;
 }
 
-/* Título del chatbot */
 #chatbot h2 {
   color: white;
   margin-bottom: 20px;
@@ -234,7 +323,6 @@ form button:hover {
   letter-spacing: 0.5px;
 }
 
-/* Input de consulta */
 #consulta {
   width: 100%;
   padding: 15px 20px;
@@ -261,7 +349,6 @@ form button:hover {
   font-style: italic;
 }
 
-/* Botón de envío */
 #btn-consulta {
   background: linear-gradient(45deg, #ff6b6b, #ee5a52);
   color: white;
@@ -310,7 +397,6 @@ form button:hover {
   transform: none;
 }
 
-/* Contenedor de respuestas */
 #respuesta-chatbot {
   margin-top: 20px;
   min-height: 60px;
@@ -320,7 +406,6 @@ form button:hover {
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
-/* Scrollbar personalizado para WebKit */
 #respuesta-chatbot::-webkit-scrollbar {
   width: 6px;
 }
@@ -339,7 +424,7 @@ form button:hover {
   background: rgba(255, 255, 255, 0.5);
 }
 
-/* Estilos base para respuestas */
+/* === RESPUESTAS DEL CHATBOT === */
 .respuesta-success,
 .respuesta-error,
 .respuesta-warning,
@@ -356,21 +441,18 @@ form button:hover {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Iconos de respuesta */
 .respuesta-icono {
   font-size: 1.2em;
   flex-shrink: 0;
   margin-top: 2px;
 }
 
-/* Contenido de respuesta */
 .respuesta-contenido {
   flex: 1;
   line-height: 1.6;
   word-wrap: break-word;
 }
 
-/* Respuesta exitosa */
 .respuesta-success {
   background: rgba(76, 175, 80, 0.9);
   color: white;
@@ -378,7 +460,6 @@ form button:hover {
   box-shadow: 0 5px 20px rgba(76, 175, 80, 0.3);
 }
 
-/* Respuesta de error */
 .respuesta-error {
   background: rgba(244, 67, 54, 0.9);
   color: white;
@@ -386,7 +467,6 @@ form button:hover {
   box-shadow: 0 5px 20px rgba(244, 67, 54, 0.3);
 }
 
-/* Respuesta de advertencia */
 .respuesta-warning {
   background: rgba(255, 193, 7, 0.9);
   color: #333;
@@ -394,7 +474,6 @@ form button:hover {
   box-shadow: 0 5px 20px rgba(255, 193, 7, 0.3);
 }
 
-/* Respuesta de carga */
 .respuesta-loading {
   background: rgba(33, 150, 243, 0.9);
   color: white;
@@ -403,7 +482,6 @@ form button:hover {
   animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1), pulse 1.5s ease-in-out infinite;
 }
 
-/* Mensaje de bienvenida */
 .mensaje-bienvenida {
   background: rgba(255, 255, 255, 0.95);
   color: #333;
@@ -434,29 +512,34 @@ form button:hover {
   color: #667eea;
 }
 
-/* Animaciones */
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0.8;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-/* Responsive Design */
+/* === RESPONSIVE DESIGN === */
 @media (max-width: 768px) {
+  .titulo h1 {
+    font-size: 2rem;
+  }
+
+  .tarjeta {
+    width: 90%;
+  }
+
+  form#formulario-tarea {
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  /* Estilos específicos para tarjetas de pasado mañana */
+  .tarjeta.pasado-mañana::after {
+    font-size: 8px;
+    padding: 3px 6px;
+  }
+  
+  .tarjeta.pasado-mañana::before {
+    font-size: 20px;
+    top: 8px;
+    right: 12px;
+  }
+
+  /* Estilos para chatbot */
   #chatbot {
     margin: 15px 10px;
     padding: 20px 15px;
@@ -512,7 +595,7 @@ form button:hover {
   }
 }
 
-/* Mejoras de accesibilidad */
+/* === MEJORAS DE ACCESIBILIDAD === */
 @media (prefers-reduced-motion: reduce) {
   #chatbot::before,
   #btn-consulta::before,
@@ -530,7 +613,6 @@ form button:hover {
   }
 }
 
-/* Modo alto contraste */
 @media (prefers-contrast: high) {
   #chatbot {
     border: 2px solid white;
@@ -546,44 +628,5 @@ form button:hover {
   .respuesta-loading,
   .respuesta-info {
     border: 2px solid;
-  }
-}
-
-/* === FOOTER === */
-footer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  gap: 5px;
-  font-size: 0.9rem;
-  color: var(--quinto-color);
-  background-color: rgba(255, 255, 255, 0.3);
-  margin-top: auto;
-}
-footer img{
-  width: 120px;
-  height: auto;
-}
-
-/* === RESPONSIVE === */
-@media (max-width: 600px) {
-  .titulo h1 {
-    font-size: 2rem;
-  }
-
-  .tarjeta {
-    width: 90%;
-  }
-
-  form#formulario-tarea {
-    width: 100%;
-    padding: 0 10px;
-  }
-
-  nav ul {
-    flex-direction: column;
-    align-items: center;
   }
 }

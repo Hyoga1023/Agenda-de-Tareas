@@ -1,26 +1,92 @@
 {
-  "name": "Gestor de Tareas de Cesar",
-  "short_name": "MisTareas",
-  "description": "Aplicación personal de gestión de tareas con ositos adorables",
-  "start_url": "/",
+  "name": "Agenda de Tareas para Danielle",
+  "short_name": "Tareas Danielle",
+  "description": "Aplicación de tareas personalizada hecha con amor por Papá para Danielle 💜",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#4285f4",
   "orientation": "portrait-primary",
+  "theme_color": "#4285f4",
+  "background_color": "#ffffff",
+  "lang": "es",
+  
   "icons": [
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiBmaWxsPSIjNDI4NWY0Ii8+Cjx0ZXh0IHg9Ijk2IiB5PSIxMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI4MCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPvCfk708L3RleHQ+Cjwvc3ZnPgo=",
+      "src": "data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'><rect width='192' height='192' fill='%234285f4'/><rect x='24' y='24' width='144' height='144' rx='20' fill='white'/><text x='96' y='120' font-family='Arial' font-size='60' fill='%234285f4' text-anchor='middle'>🐻</text><text x='96' y='160' font-family='Arial' font-size='20' fill='%234285f4' text-anchor='middle'>Tareas</text></svg>",
       "sizes": "192x192",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiBmaWxsPSIjNDI4NWY0Ii8+Cjx0ZXh0IHg9IjI1NiIgeT0iMzIwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+TvTwvdGV4dD4KPC9zdmc+Cg==",
+      "src": "data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'><rect width='512' height='512' fill='%234285f4'/><rect x='64' y='64' width='384' height='384' rx='50' fill='white'/><text x='256' y='320' font-family='Arial' font-size='120' fill='%234285f4' text-anchor='middle'>🐻</text><text x='256' y='400' font-family='Arial' font-size='40' fill='%234285f4' text-anchor='middle'>Agenda Tareas</text></svg>",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'><rect width='192' height='192' fill='%23ffffff'/><circle cx='96' cy='96' r='80' fill='%234285f4'/><text x='96' y='120' font-family='Arial' font-size='60' fill='white' text-anchor='middle'>🐻</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     }
   ],
-  "categories": ["productivity", "utilities"],
-  "lang": "es-CO",
-  "scope": "/",
-  "prefer_related_applications": false
+  
+  "categories": ["productivity", "education", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "Agregar Tarea",
+      "short_name": "Nueva Tarea",
+      "description": "Agregar una tarea nueva rápidamente",
+      "url": "./?action=nueva-tarea",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'><rect width='96' height='96' fill='%2328a745'/><text x='48' y='60' font-family='Arial' font-size='40' fill='white' text-anchor='middle'>➕</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Ver Tareas de Hoy",
+      "short_name": "Hoy",
+      "description": "Ver las tareas programadas para hoy",
+      "url": "./?filter=hoy",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'><rect width='96' height='96' fill='%23ffc107'/><text x='48' y='60' font-family='Arial' font-size='40' fill='white' text-anchor='middle'>📅</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  
+  "prefer_related_applications": false,
+  "related_applications": [],
+  
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' width='720' height='1280' viewBox='0 0 720 1280'><rect width='720' height='1280' fill='%23f8f9fa'/><rect x='20' y='100' width='680' height='200' rx='20' fill='%234285f4'/><text x='360' y='180' font-family='Arial' font-size='40' fill='white' text-anchor='middle'>🐻 Agenda de Tareas</text><text x='360' y='220' font-family='Arial' font-size='24' fill='white' text-anchor='middle'>Para Danielle</text><rect x='40' y='340' width='640' height='100' rx='15' fill='white' stroke='%23dee2e6' stroke-width='2'/><text x='60' y='380' font-family='Arial' font-size='20' fill='%23495057'>📝 Hacer tarea de matemáticas</text><text x='60' y='410' font-family='Arial' font-size='16' fill='%236c757d'>📅 2025-07-29</text></svg>",
+      "sizes": "720x1280",
+      "type": "image/svg+xml",
+      "form_factor": "narrow",
+      "label": "Vista principal de la aplicación"
+    }
+  ],
+  
+  "features": [
+    "offline-support",
+    "push-notifications",
+    "local-storage"
+  ],
+  
+  "protocol_handlers": [],
+  
+  "capture_links": "new-client",
+  
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
 }
