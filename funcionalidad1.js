@@ -526,15 +526,6 @@ function inicializarApp() {
     gestorNotificaciones.verificarYNotificar();
   }, 2000);
 
-  // Agregar botón de prueba (temporal)
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    const btnPrueba = document.createElement('button');
-    btnPrueba.textContent = '🧪 Probar Notificación';
-    btnPrueba.onclick = () => gestorNotificaciones.probarNotificacion();
-    btnPrueba.style.cssText = 'position: fixed; bottom: 20px; right: 20px; z-index: 1000; padding: 10px; background: #4285f4; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 12px;';
-    document.body.appendChild(btnPrueba);
-  }
-
   console.log('✅ Aplicación inicializada correctamente');
 }
 
